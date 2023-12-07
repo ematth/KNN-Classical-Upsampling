@@ -9,6 +9,7 @@ Loads an image from path. Returns a blank Numpy Array if image is not found
 def get_im(path: str) -> np.ndarray:
     try:
         im = cv2.imread('images/' + path)
+        assert len(im.shape) == 3 # images are of size (width, height, (Red, Green, Blue)) or (width, height, (Red, Green, Blue, Alpha))
         return im
     except:
         return np.zeros((100, 100))

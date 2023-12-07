@@ -76,7 +76,7 @@ Given a prepped image, fills in the "empty" pixels (odd indices) by
 averaging all even indexed pixels up to k steps away.
 This implementation only works for images prepped by prep_upsample
 """
-def KNN_upsample_prepped(im, k=1):
+def KNN_upsample_prepped(im: np.ndarray, k: int = 1) -> np.ndarray:
     new_im = np.zeros_like(im, dtype=float)
     for i in range(im.shape[0]):
         for j in range(im.shape[1]):
@@ -110,7 +110,7 @@ to perform the task.
 Given an image, upsamples both dimensions by a factor of 2. This is equivilant to the "KNN_upsample_prepped" function
 without the necessity for creating an intermediary prepped image.
 """
-def KNN_upsample_no_prep(im, k=1):
+def KNN_upsample_no_prep(im: np.ndarray, k: int = 1) -> np.ndarray:
     factor = 2
     new_im = np.zeros((im.shape[0] * factor, im.shape[1] * factor, im.shape[2]), dtype=float)
     for i in range(new_im.shape[0]):
@@ -138,7 +138,7 @@ def KNN_upsample_no_prep(im, k=1):
 """
 Given an image, upsamples both dimensions by some factor.
 """
-def KNN_upsample_variable_factor(im, k=1, factor=2):
+def KNN_upsample_variable_factor(im: np.ndarray, k: int = 1, factor: int = 2) -> np.ndarray:
     new_im = np.zeros((im.shape[0] * factor, im.shape[1] * factor, im.shape[2]), dtype=float)
     for i in range(new_im.shape[0]):
         for j in range(new_im.shape[1]):
@@ -165,7 +165,7 @@ def KNN_upsample_variable_factor(im, k=1, factor=2):
 """
 Given an image, upsamples each dimension by some (possibly unique) factor.
 """
-def KNN_upsample_variable_factors(im, k=1, factor1=2, factor2=3):
+def KNN_upsample_variable_factors(im: np.ndarray, k: int = 1, factor1: int = 2, factor2: int = 3) -> np.ndarray:
     new_im = np.zeros((im.shape[0] * factor1, im.shape[1] * factor2, im.shape[2]), dtype=float)
     for i in range(new_im.shape[0]):
         for j in range(new_im.shape[1]):
