@@ -17,22 +17,24 @@ Assumes even image shape
 
 """
 def downsample(im: np.ndarray) -> np.ndarray:
-    shape = im.shape
-    new_shape = (shape[0] // 2, shape[1] // 2, shape[2])
+    (a, b, c) = im.shape
+    new_shape = (a // 2, b // 2, c)
 
     new_im = np.zeros(new_shape, dtype=float)
-    for i in range(im.shape[0]):
-        for j in range(im.shape[1]):
+    for i in range(a):
+        for j in range(b):
             if j % 2 == 0 and i % 2 == 0:
                 new_im[i//2, j//2] = im[i, j]
                     
     return new_im
 
+
+# https://www.tutorialkart.com/opencv/python/opencv-python-resize-image/#gsc.tab=0
 def cv2_downsample(im: np.ndarray) -> np.ndarray:
-    # https://www.tutorialkart.com/opencv/python/opencv-python-resize-image/#gsc.tab=0
+    (a, b, c) = im.shape   
     scale_percent = 50 # percent of original size
-    width = int(im.shape[1] * scale_percent / 100)
-    height = int(im.shape[0] * scale_percent / 100)
+    width = int(b * scale_percent / 100)
+    height = int(a * scale_percent / 100)
     dim = (width, height)
   
     # resize image
@@ -77,14 +79,15 @@ averaging all even indexed pixels up to k steps away.
 This implementation only works for images prepped by prep_upsample
 """
 def KNN_upsample_prepped(im: np.ndarray, k: int = 1) -> np.ndarray:
+    (a, b, c) = im.shape
     new_im = np.zeros_like(im, dtype=float)
-    for i in range(im.shape[0]):
-        for j in range(im.shape[1]):
+    for i in range(a):
+        for j in range(b):
             if i % 2 == 1 or j % 2 == 1:
                 # Must fill this value by performing a KNN average
                 neighbor_pixel_values = []
-                for m in range(max(0, i-k), min(i+k+1, im.shape[0]-1)):
-                    for n in range(max(0, j-k), min(j+k+1, im.shape[1]-1)):
+                for m in range(max(0, i-k), min(i+k+1, a-1)):
+                    for n in range(max(0, j-k), min(j+k+1, b-1)):
                         if m % 2 == 0 and n % 2 == 0:
                             neighbor_pixel_values.append(im[m, n])
                             
@@ -110,9 +113,9 @@ to perform the task.
 Given an image, upsamples both dimensions by a factor of 2. This is equivilant to the "KNN_upsample_prepped" function
 without the necessity for creating an intermediary prepped image.
 """
-def KNN_upsample_no_prep(im: np.ndarray, k: int = 1) -> np.ndarray:
-    factor = 2
-    new_im = np.zeros((im.shape[0] * factor, im.shape[1] * factor, im.shape[2]), dtype=float)
+def KNN_upsample_no_prep(im: np.ndarray, k: int = 1, factor: int = 2) -> np.ndarray:
+    (a, b, c) = im.shape
+    new_im = np.zeros((a * factor, b * factor, c), dtype=np.float64)
     for i in range(new_im.shape[0]):
         for j in range(new_im.shape[1]):
             if i % factor == 0 and j % factor == 0:
@@ -127,9 +130,8 @@ def KNN_upsample_no_prep(im: np.ndarray, k: int = 1) -> np.ndarray:
                     for n in range(max(0, j-k), min(j+k+1, new_im.shape[1]-1)):
                         if m % factor == 0 and n % factor == 0:
                             neighbor_pixel_values.append(im[m // factor, n // factor])
-                            
-                to_average = np.array(neighbor_pixel_values)
-                avg_value = np.mean(to_average, axis=0)
+
+                avg_value = np.mean(np.array(neighbor_pixel_values), axis=0)
                 new_im[i, j] = avg_value     
     
     return new_im
@@ -139,7 +141,8 @@ def KNN_upsample_no_prep(im: np.ndarray, k: int = 1) -> np.ndarray:
 Given an image, upsamples both dimensions by some factor.
 """
 def KNN_upsample_variable_factor(im: np.ndarray, k: int = 1, factor: int = 2) -> np.ndarray:
-    new_im = np.zeros((im.shape[0] * factor, im.shape[1] * factor, im.shape[2]), dtype=float)
+    (a, b, c) = im.shape
+    new_im = np.zeros((a * factor, b * factor, c), dtype=np.float64)
     for i in range(new_im.shape[0]):
         for j in range(new_im.shape[1]):
             if i % factor == 0 and j % factor == 0:
@@ -155,8 +158,7 @@ def KNN_upsample_variable_factor(im: np.ndarray, k: int = 1, factor: int = 2) ->
                         if m % factor == 0 and n % factor == 0:
                             neighbor_pixel_values.append(im[m // factor, n // factor])
                             
-                to_average = np.array(neighbor_pixel_values)
-                avg_value = np.mean(to_average, axis=0)
+                avg_value = np.mean(np.array(neighbor_pixel_values), axis=0)
                 new_im[i, j] = avg_value     
     
     return new_im
@@ -166,7 +168,8 @@ def KNN_upsample_variable_factor(im: np.ndarray, k: int = 1, factor: int = 2) ->
 Given an image, upsamples each dimension by some (possibly unique) factor.
 """
 def KNN_upsample_variable_factors(im: np.ndarray, k: int = 1, factor1: int = 2, factor2: int = 3) -> np.ndarray:
-    new_im = np.zeros((im.shape[0] * factor1, im.shape[1] * factor2, im.shape[2]), dtype=float)
+    (a, b, c) = im.shape
+    new_im = np.zeros((a * factor1, b * factor2, c), dtype=np.float64)
     for i in range(new_im.shape[0]):
         for j in range(new_im.shape[1]):
             if i % factor1 == 0 and j % factor2 == 0:
