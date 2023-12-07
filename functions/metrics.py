@@ -1,5 +1,5 @@
 import numpy as np
-
+import warnings
 
 """
 Calculates the mean squared difference per pixel between two images of the same shape.
@@ -40,11 +40,10 @@ With perfect similarity, PSNR=infinity.
 Reference: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
 """
 def psnr(im1: np.ndarray, im2: np.ndarray) -> np.float64:
-    with np.warnings.catch_warnings():
-        np.warnings.filterwarnings('ignore', r'RuntimeWarning: divide by zero encountered') # TODO: Fix Log10 issue (add machine epsilon?)
-        error: np.float64 = (20 * np.log10(255)) - (10 * np.log10(mse(im1, im2)))
+    np.seterr(divide='ignore') # TODO: Fix Log10 divide warning!
+    error: np.float64 = (20 * np.log10(255)) - (10 * np.log10(mse(im1, im2)))
     return error
-    
+
 
 """
 Calculate the structural similarity index measure between two images of the same shape.
