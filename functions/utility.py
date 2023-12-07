@@ -9,10 +9,9 @@ Loads an image from path. Returns a blank Numpy Array if image is not found
 def get_im(path: str) -> np.ndarray:
     try:
         im = cv2.imread('images/' + path)
-        assert len(im.shape) == 3 # images are of size (width, height, (Red, Green, Blue)) or (width, height, (Red, Green, Blue, Alpha))
         return im
     except:
-        return np.zeros((100, 100))
+        return np.zeros((100, 100, 3))
     
 
 
@@ -29,36 +28,49 @@ Displays images relating to prepped upsampling (original, downsampled, prepped, 
 Assumes a BGR image format.
 """
 titles: list[str] = ['Original', 'Downsampled', 'Prepped', 'Upsampled']
-def display_prepped_upsampling_results(samples: list[np.ndarray]) -> None:
+def display_prepped_upsampling_results(samples: list[np.ndarray], path: str = 'temp.png') -> None:
     [original_im, downsampled_im, prepped_im, upsampled_im] = samples
     
     fig, axs = plt.subplots(2, 2, figsize=(10, 10))
-    fig.suptitle("Results for Prepped Upsampling", fontsize=16)
+    #fig.suptitle("Results for Prepped Upsampling", fontsize=16)
+    fig.tight_layout()
+    plt.axis('off')
 
     # Display Images
     for i, a in enumerate(axs.flatten()):
         a.imshow(samples[i][:,:,[2,1,0]])
         a.set_title(titles[i])
+        a.axis('off')
+        a.get_tightbbox()
     
-    plt.show()
+    #plt.show()
+    fig.savefig('results/' + path, bbox_inches='tight')
     
 
 """
 Displays images relating to no-prep upsampling (original, downsampled, upsampled).
 Assumes a BGR image format.
 """
-def display_upsampling_results(original_im: np.ndarray, upsampled_im: np.ndarray) -> None:
+def display_upsampling_results(original_im: np.ndarray, upsampled_im: np.ndarray, path: str = 'temp.png') -> None:
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
-    fig.suptitle("Results for Upsampling", fontsize=16)
+    #fig.suptitle("Results for Upsampling", fontsize=16)
+    fig.tight_layout()
+    plt.axis('off')
 
     # Display the images
     axs[0].imshow(original_im[:,:,[2,1,0]])
     axs[0].set_title("Original")
+    axs[0].axis('off')
+    axs[0].get_tightbbox()
     
     axs[1].imshow(upsampled_im[:,:,[2,1,0]])
     axs[1].set_title("Upsampled")
-    
-    plt.show()
+    axs[1].axis('off')
+    axs[1].get_tightbbox()
+
+
+    #plt.show()
+    fig.savefig('results/' + path, bbox_inches='tight')
     
 
 """

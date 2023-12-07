@@ -17,12 +17,12 @@ Assumes even image shape
 
 """
 def downsample(im: np.ndarray) -> np.ndarray:
-    (a, b, c) = im.shape
-    new_shape = (a // 2, b // 2, c)
+    shape = im.shape
+    new_shape = (shape[0] // 2, shape[1] // 2, shape[0])
 
     new_im = np.zeros(new_shape, dtype=float)
-    for i in range(a):
-        for j in range(b):
+    for i in range(shape[0]):
+        for j in range(shape[1]):
             if j % 2 == 0 and i % 2 == 0:
                 new_im[i//2, j//2] = im[i, j]
                     
