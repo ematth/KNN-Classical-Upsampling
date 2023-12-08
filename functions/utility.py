@@ -4,14 +4,27 @@ import numpy as np
 
 
 """
+WIP
+Decorator to confirm numpy array dimensions according to annotations.
+"""
+def dimcast(func):
+    def wrapper(*fargs, **fkwargs):
+        #print(f'annotations: {func.__annotations__}')
+        #print(f'args: {fargs}')
+        #print(f'kwargs: {fkwargs}')
+        return func(*fargs, **fkwargs)
+    return wrapper
+
+
+"""
 Loads an image from path. Returns a blank Numpy Array if image is not found
 """
 def get_im(path: str) -> np.ndarray:
     try:
         im = cv2.imread('images/' + path)
-        return im
+        return im.astype(float)
     except:
-        return np.zeros((100, 100, 3))
+        return np.zeros((1., 1., 3.))
     
 
 
