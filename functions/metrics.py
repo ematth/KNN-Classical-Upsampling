@@ -1,5 +1,5 @@
 import numpy as np
-from functions.utility import dimcast
+from functions.utility import dimcheck
 
 
 """
@@ -7,8 +7,9 @@ Calculates the mean squared difference per pixel between two images of the same 
 Lower MSE indicates more similar images.
 With perfect similarity, MSE=0.
 """
-@dimcast
-def mse(im1: np.ndarray, im2: np.ndarray) -> float:
+dim: int = 0
+@dimcheck
+def mse(im1: np.ndarray((dim, dim, 3), dtype=float), im2: np.ndarray((dim, dim, 3), dtype=float)) -> float:
     error: float = np.sum((im1.astype(float) - im2.astype(float)) ** 2)
     error /= im1.shape[0] * im1.shape[1]
     return error
@@ -19,8 +20,8 @@ Calculates the root mean squared difference per pixel between two images of the 
 Lower RMSE indicates more similar images.
 With perfect similarity, RMSE=0.
 """
-@dimcast
-def rmse(im1: np.ndarray, im2: np.ndarray) -> float:
+@dimcheck
+def rmse(im1: np.ndarray((dim, dim, 3)), im2: np.ndarray((dim, dim, 3))) -> float:
     error: float = np.sqrt(mse(im1, im2))
     return error
 
@@ -30,8 +31,8 @@ Calculate the mean absolute difference per pixel between two images of the same 
 Lower MAE indicates more similar images.
 With perfect similarity, MAE=0.
 """
-@dimcast
-def mae(im1: np.ndarray, im2: np.ndarray) -> float:
+@dimcheck
+def mae(im1: np.ndarray((dim, dim, 3)), im2: np.ndarray((dim, dim, 3))) -> float:
     error: float = np.sum(np.abs(im1.astype(float) - im2.astype(float)))
     error /= im1.shape[0] * im1.shape[1]  
     return error
@@ -43,8 +44,8 @@ Higher PSNR indicates higher-quality reconstruction (generally in the range of 3
 With perfect similarity, PSNR=infinity.
 Reference: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
 """
-@dimcast
-def psnr(im1: np.ndarray, im2: np.ndarray) -> float:
+@dimcheck
+def psnr(im1: np.ndarray((dim, dim, 3)), im2: np.ndarray((dim, dim, 3))) -> float:
     np.seterr(divide='ignore') # TODO: Fix Log10 divide warning!
     error: float = (20 * np.log10(255)) - (10 * np.log10(mse(im1, im2)))
     return error
@@ -56,8 +57,8 @@ Higher SSIM indicates more similarity between images (luminence, constrast, stru
 -1 to 1 scale.
 With perfect similarity, SSIM=1.
 """
-@dimcast
-def ssim(im1: np.ndarray, im2: np.ndarray) -> float:
+@dimcheck
+def ssim(im1: np.ndarray((dim, dim, 3)), im2: np.ndarray((dim, dim, 3))) -> float:
     # https://en.wikipedia.org/wiki/Structural_similarity
     mean1 = np.mean(im1)
     mean2 = np.mean(im2)

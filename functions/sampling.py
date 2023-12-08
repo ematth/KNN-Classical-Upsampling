@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
+from functions.utility import dimcheck
 
 
 """
@@ -16,7 +17,8 @@ Downsamples an image by factor of 2 by throwing out every odd indexed pixel.
 Assumes even image shape
 
 """
-def downsample(im: np.ndarray) -> np.ndarray:
+@dimcheck
+def downsample(im: np.ndarray((0, 0, 3))) -> np.ndarray((0, 0, 3)):
     shape = im.shape
     new_shape = (shape[0] // 2, shape[1] // 2, shape[0])
 
@@ -30,6 +32,7 @@ def downsample(im: np.ndarray) -> np.ndarray:
 
 
 # https://www.tutorialkart.com/opencv/python/opencv-python-resize-image/#gsc.tab=0
+@dimcheck
 def cv2_downsample(im: np.ndarray) -> np.ndarray:
     (a, b, c) = im.shape   
     scale_percent = 50 # percent of original size
@@ -61,6 +64,7 @@ Prepares to upsample and image by factor of "factor" by creating an image
 where every even indexed pixel originates from the provided image and every 
 odd indexed pixel is empty.
 """
+@dimcheck
 def prep_upsample(im: np.ndarray, factor: int = 2) -> np.ndarray:
     (a, b, c) = im.shape
     new_shape = (a * factor, b * factor, c)
@@ -78,6 +82,7 @@ Given a prepped image, fills in the "empty" pixels (odd indices) by
 averaging all even indexed pixels up to k steps away.
 This implementation only works for images prepped by prep_upsample
 """
+@dimcheck
 def KNN_upsample_prepped(im: np.ndarray, k: int = 1) -> np.ndarray:
     (a, b, c) = im.shape
     new_im = np.zeros_like(im, dtype=float)
@@ -113,6 +118,7 @@ to perform the task.
 Given an image, upsamples both dimensions by a factor of 2. This is equivilant to the "KNN_upsample_prepped" function
 without the necessity for creating an intermediary prepped image.
 """
+@dimcheck
 def KNN_upsample_no_prep(im: np.ndarray, k: int = 1, factor: int = 2) -> np.ndarray:
     (a, b, c) = im.shape
     new_im = np.zeros((a * factor, b * factor, c), dtype=np.float64)
@@ -140,6 +146,7 @@ def KNN_upsample_no_prep(im: np.ndarray, k: int = 1, factor: int = 2) -> np.ndar
 """
 Given an image, upsamples both dimensions by some factor.
 """
+@dimcheck
 def KNN_upsample_variable_factor(im: np.ndarray, k: int = 1, factor: int = 2) -> np.ndarray:
     (a, b, c) = im.shape
     new_im = np.zeros((a * factor, b * factor, c), dtype=np.float64)
@@ -167,6 +174,7 @@ def KNN_upsample_variable_factor(im: np.ndarray, k: int = 1, factor: int = 2) ->
 """
 Given an image, upsamples each dimension by some (possibly unique) factor.
 """
+@dimcheck
 def KNN_upsample_variable_factors(im: np.ndarray, k: int = 1, factor1: int = 2, factor2: int = 3) -> np.ndarray:
     (a, b, c) = im.shape
     new_im = np.zeros((a * factor1, b * factor2, c), dtype=np.float64)

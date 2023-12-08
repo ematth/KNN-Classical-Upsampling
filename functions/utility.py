@@ -7,12 +7,17 @@ import numpy as np
 WIP
 Decorator to confirm numpy array dimensions according to annotations.
 """
-def dimcast(func):
-    def wrapper(*fargs, **fkwargs):
-        #print(f'annotations: {func.__annotations__}')
-        #print(f'args: {fargs}')
-        #print(f'kwargs: {fkwargs}')
-        return func(*fargs, **fkwargs)
+def dimcheck(func):
+    def wrapper(*args, **kwargs):
+        annotes = (func.__annotations__)
+        b = list(annotes.keys())
+        for i, a in enumerate(args):
+            if type(a[1]) == (np.ndarray or np.array):
+                if (len(a.shape) == 3 and a.shape[2] == (3 or 4)) or (a.shape == None):
+                    continue
+                else:
+                    raise TypeError(f'Array dimensions fail on {b[i]} of shape {a.shape}') 
+        return func(*args, **kwargs)
     return wrapper
 
 
