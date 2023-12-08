@@ -24,7 +24,7 @@ def dimcheck(func):
 """
 Loads an image from path. Returns a blank Numpy Array if image is not found
 """
-def get_im(path: str) -> np.ndarray:
+def get_im(path: str) -> np.ndarray((0, 0, 3), float):
     try:
         im = cv2.imread('images/' + path)
         return im.astype(float)

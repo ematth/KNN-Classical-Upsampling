@@ -7,7 +7,7 @@ Calculates the mean squared difference per pixel between two images of the same 
 Lower MSE indicates more similar images.
 With perfect similarity, MSE=0.
 """
-dim: int = 0
+dim: int = 0 # placeholder value
 @dimcheck
 def mse(im1: np.ndarray((dim, dim, 3), dtype=float), im2: np.ndarray((dim, dim, 3), dtype=float)) -> float:
     error: float = np.sum((im1.astype(float) - im2.astype(float)) ** 2)
@@ -82,3 +82,16 @@ def ssim(im1: np.ndarray((dim, dim, 3)), im2: np.ndarray((dim, dim, 3))) -> floa
 
     error: float = l * c * s
     return error
+
+
+"""
+Perform all metric calculations (MSE, RMSE, MAE, PSNR, SSIM), printing the results to a table
+"""
+@dimcheck
+def all_metrics(im1: np.ndarray((dim, dim, 3), float), im2: np.ndarray((dim, dim, 3), float)) -> None:
+    metric = [mse, rmse, mae, psnr, ssim]
+    metric_label = ['MSE', 'RMSE', 'MAE', 'PSNR', 'SSIM']
+    for i in range(len(metric)):
+        print(f'{metric_label[i]}: {metric[i](im1, im2)}')
+    print('\n')
+    return
