@@ -250,3 +250,8 @@ def KNN_upsample_variable_factors(im: np.ndarray, k: int = 1, factor1: int = 2, 
                 new_im[i, j] = avg_value     
     
     return new_im
+
+
+@dimcheck
+def edge_detection(im: np.ndarray((0, 0, 3)), a: int = 100, b: int = 200, l2: bool = False) -> np.ndarray((0, 0, 3)):
+    return cv2.Canny(im, a, b)

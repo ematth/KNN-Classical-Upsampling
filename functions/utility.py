@@ -4,7 +4,6 @@ import numpy as np
 
 
 """
-WIP
 Decorator to confirm numpy array dimensions according to annotations.
 """
 def dimcheck(func):
