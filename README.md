@@ -1,6 +1,7 @@
 # Nearest Neighbor Classication for Classical Image Upscaling
 
 > ************************[Evan Matthews](https://github.com/ematth) (evanmm3@illinois.edu), [Nicolas Prate](https://github.com/nprate2) (nprate2@illinois.edu)************************
+>
 > ************************Department of Computer Science, Grainger College of Engineering, University of Illinois Urbana-Champaign************************
 
 ---
