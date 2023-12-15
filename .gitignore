@@ -1,2 +1,3 @@
 # Ignore changes to results, (this happens a lot in commits!)
 results/
+cifar-10-batches-py/
