@@ -37,7 +37,7 @@ def downsample(im: np.ndarray((0, 0, 3))) -> np.ndarray((0, 0, 3)):
 
 
 @dimcheck
-def cv2_downsample(im: np.ndarray((0, 0, 3))) -> np.ndarray((0, 0, 3)):
+def cv2_downsample(im: np.ndarray((0, 0, 3)), scale_percent: int=50) -> np.ndarray((0, 0, 3)):
     """
     Downsamples an image by a factor of 2 using CV2 library functions.
     Reference: https://www.tutorialkart.com/opencv/python/opencv-python-resize-image/#gsc.tab=0
@@ -49,7 +49,7 @@ def cv2_downsample(im: np.ndarray((0, 0, 3))) -> np.ndarray((0, 0, 3)):
         np.ndarray: downsampled Image array of size(w/2, h/2, 3).
     """    
     (a, b, c) = im.shape   
-    scale_percent = 50 # percent of original size
+    #scale_percent = 50 # percent of original size
     width = int(b * scale_percent / 100)
     height = int(a * scale_percent / 100)
     dim = (width, height)
@@ -252,37 +252,6 @@ def KNN_upsample_variable_factors(im: np.ndarray, k: int = 1, factor1: int = 2, 
     return new_im
 
 
-def KNN_upsample_selective(im: np.ndarray, edges: np.ndarray, k_standard: int = 1, k_dense: int = 1, factor: int = 2) -> np.ndarray:
-    """
-    Given an image and an edge analysis array, upsamples both dimensions of the image. 
-    The number of steps of nearest neighbors in consideration is dependent on 
-
-    Args:
-        im (np.ndarray): Image array of size (w, h, 3).
-        edges (np.ndarray): Edge analysis array of size (w, h, 3).
-        k_standard (int, optional): Number of steps away from a given pixel to use in approximation for non-dense-edge pixels. Defaults to 1.
-        k_dense (int, optional): Number of steps away from a given pixel to use in approximation for dense-edge pixels.
-            k_dense == k_standard is equivalent to KNN_upsample_variable_factor().
-        factor (int, optional): Factor to upsample the image in both dimensions by. Defaults to 2.
-
-    Returns:
-        np.ndarray: Upsampled Image array of size (factor * w, factor * h, 3).
-    """    
-    (a, b) = im.shape
-    new_im = np.zeros((a * factor, b * factor), dtype=np.float64)
-    for i in range(new_im.shape[0]):
-        for j in range(new_im.shape[1]):
-            if i % factor == 0 and j % factor == 0:
-                new_im[i, j] = im[i // factor, j // factor]
-            else:  
-                k = k_standard if (i % factor == 0 and j % factor == 0 and edges[i // factor, j // factor] == 0) else k_dense
-                neighbor_pixel_values = []
-                for m in range(max(0, i-k), min(i+k+1, new_im.shape[0]-1)):
-                    for n in range(max(0, j-k), min(j+k+1, new_im.shape[1]-1)):
-                        if m % factor == 0 and n % factor == 0:
-                            neighbor_pixel_values.append(im[m // factor, n // factor])
-                            
-                avg_value = np.mean(np.array(neighbor_pixel_values), axis=0)
-                new_im[i, j] = avg_value     
-    
-    return new_im
+@dimcheck
+def edge_detection(im: np.ndarray((0, 0, 3)), a: int = 100, b: int = 200, l2: bool = False) -> np.ndarray((0, 0, 3)):
+    return cv2.Canny(im, a, b)
