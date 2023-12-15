@@ -35,8 +35,9 @@ def get_im(path: str) -> np.ndarray((0, 0, 3), float):
 """
 Displays a BGR image.
 """
-def display_bgr(im: np.ndarray) -> None:
+def display_bgr(im: np.ndarray, title: str = "") -> None:
     plt.imshow(im[:,:,[2,1,0]])
+    plt.title(title)
     plt.show()
 
 
