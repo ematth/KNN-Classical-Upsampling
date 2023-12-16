@@ -35,8 +35,9 @@ def get_im(path: str) -> np.ndarray((0, 0, 3), float):
 """
 Displays a BGR image.
 """
-def display_bgr(im: np.ndarray) -> None:
+def display_bgr(im: np.ndarray, title: str = "") -> None:
     plt.imshow(im[:,:,[2,1,0]])
+    plt.title(title)
     plt.show()
 
 
@@ -105,3 +106,33 @@ def make_even_shape(im: np.ndarray) -> np.ndarray:
     
     else:
         return im
+
+"""
+Generates a color gradient image on a [0, 255] uint8 scale given an image using the cv2 Sobel operator.
+"""
+def get_color_gradient(im, plot=False):
+    # Ensure im is of type uint8
+    grad_im = im
+    if type(im[0,0,0]) != np.uint8:
+        grad_im = (im * 255).astype(np.uint8)
+        
+    # Convert to grayscale
+    gray = cv2.cvtColor(grad_im, cv2.COLOR_BGR2GRAY)
+
+    # Calculate the x and y gradients using Sobel operator
+    grad_x = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
+    grad_y = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
+
+    # Combining the two gradients
+    grad_magnitude = cv2.magnitude(grad_x, grad_y)
+
+    # Normalize the gradient for visualization
+    grad_magnitude = np.uint8(255 * grad_magnitude / np.max(grad_magnitude))
+
+    if plot:
+        # Display the gradient image
+        plt.imshow(grad_magnitude, cmap='gray')
+        plt.title('Color Gradient Image')
+        plt.show()
+    
+    return grad_magnitude
