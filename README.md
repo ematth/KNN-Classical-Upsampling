@@ -1,4 +1,4 @@
-# Nearest Neighbor Classication for Classical Image Upscaling
+# Nearest Neighbor Classication for Classical Image Upsampling
 
 > ************************[Evan Matthews](https://github.com/ematth) (evanmm3@illinois.edu), [Nicolas Prate](https://github.com/nprate2) (nprate2@illinois.edu)************************
 >
